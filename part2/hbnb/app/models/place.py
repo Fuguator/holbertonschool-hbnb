@@ -1,50 +1,73 @@
 import uuid
 from datetime import datetime
 from app.models.__init__ import BaseModel
+from app.models.user import User
 
 
-class Place(BaseModel):
-    def __init__(self, title: str, description: str, price: float, latitude: str, longitude: str, owner) -> None:
+class Place(BaseModel, User):
+    def __init__(self, title, description, price, latitude, longitude, owner_id: str, id=None, amenities=[]):
         super().__init__()
         self.id = str(uuid.uuid4())
-        self.title = title
-        self.description = description
-        self.price = price
+        self._title = title
+        self._description = description
+        self._price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner
-    
-    def save(self):
-        """Update the updated_at timestamp whenever the object is modified"""
-        self.updated_at = datetime.now()
+        self.owner_id = owner_id
+        self.reviews = []
+        self.amenities = amenities
+        self.users = []
 
-    def update(self, data):
-        """Update the attributes of the object based on the provided dictionary"""
-        for key, value in data.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-        self.save()
 
-    def title_validation(self, text):
-        if len(self.title) < 1:
-            raise ValueError("title's length is empty")
-        elif len(self.title) > 100:
-            raise ValueError("title's length is over 100 characters")
-        self.title = text
+    @property
+    def title(self):
+        return self._title
 
-    def price_validation(self, value):
-        if self.price < 0:
-            raise ValueError("Price can't be negative")
-        self.price = value
 
-    def latitude_validation(self, value):
-        if len(self.latitude) not in range(-90, 90):
-            raise ValueError("latitude must be in range -90 : 90")
-        self.latitude = value
+    @title.setter
+    def title(self, value):
+        if len(value) > 100:
+            raise TypeError("Error: title is invalid")
         
-    def longitude_validation(self, value):
-        if len(self.latitude) not in range(-180, 180):
-            raise ValueError("longtitude must be in range -180 : 180")
-        self.longitude = value
+        self._title = value
+
+
+    @property
+    def description(self):
+        return self._description
+
+
+    @description.setter
+    def description(self, value):
+        self._description = value
+
+
+    @property
+    def price(self):
+        return self._price
+
+
+    @price.setter
+    def price(self, value):
+        if value < 0:
+            raise ValueError("Price can't be negative")
+        self._price = value
+
+
+    def set_coordinates(self, latitude, longitude):
+        if not -90 <= latitude <= 90 or not -180 <= longitude <= 180:
+            raise ValueError("Coordinates of latitude and longitude aren't correct")
+        
+        self.latitude = latitude
+        self.longitude = longitude
     
-    
+    def add_review(self, review):
+        self.reviews.append(review)
+
+
+    def add_amenity(self, amenity):
+        self.amenities.append(amenity)
+
+
+    def add_user(self, user):
+        self.users.append(user)
