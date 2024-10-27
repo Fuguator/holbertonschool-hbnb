@@ -10,3 +10,8 @@ class Amenity(BaseModel):
         self.name = name
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
+        
+    def name_validation(self, value):
+        if len(self.name) not in range(1, 50):
+            raise ValueError("invalid name's length")
+        self.name = value

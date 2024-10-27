@@ -13,6 +13,16 @@ class Reviev(BaseModel):
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
     
+    def text_validation(self, value):
+        if len(self.text) < 1:
+            raise ValueError("text if empty")
+        self.text = value
+    
+    def rating_validation(self, digit):
+        if self.rating not in range(1, 5):
+            raise ValueError("invalid rating")
+        self.rating = digit
+    
     def save(self):
         """Update the updated_at timestamp whenever the object is modified"""
         self.updated_at = datetime.now()
