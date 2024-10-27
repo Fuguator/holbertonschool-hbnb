@@ -2,6 +2,7 @@ from app.persistence.repository import InMemoryRepository
 from app.models.user import User
 from app.models.amenity import Amenity
 from app.models.place import Place
+from app.models.review import Review
 import uuid
 
 
@@ -98,3 +99,38 @@ class HBnBFacade:
                 place.owner_id = place_data['owner_id']
             self.place_repo.update(place, place_data)
         return place
+
+
+    
+    
+    
+      
+    def create_review(self, review_data):
+        review = Review(**review_data)
+        self.review_repo.add(review)
+        return review
+
+    def get_review(self, review_id):
+        return self.review_repo.get(review_id)
+
+    def get_all_reviews(self):
+        return self.review_repo.get_all()
+
+    def get_reviews_by_place(self, place_id):
+        return self.review_repo.get(place_id)
+
+    def update_review(self, review_id, review_data):
+        review = self.review_repo.get(review_id)
+        if review:
+            if 'text' in review_data:
+                review.text = review_data['text']
+            if 'rating' in review_data:
+                review.rating = review_data['rating']
+            if 'user_id' in review_data:
+                review.user_id = review_data['user_id']
+
+    def delete_review(self, review_id):
+        review = self.review_repo.get(review_id)
+        if review:
+            self.review_repo.delete(review_id)
+            return {'message': 'Sucess'}
