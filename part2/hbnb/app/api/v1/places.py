@@ -99,11 +99,11 @@ class PlaceResource(Resource):
         if not updated_place:
             return {'message': 'Place not found'}, 404
         return {
-                "id": place_data.id,
-                "title": place_data.title,
-                "description": place_data.description,
-                "price": place_data.price,
-                "latitude": place_data.latitude,
-                "longitude": place_data.longitude,
-                "owner_id": place_data.owner_id
+                "id": updated_place.id,
+                "title": updated_place.title,
+                "description": updated_place.description,
+                "price": updated_place.price,
+                "latitude": updated_place.latitude,
+                "longitude": updated_place.longitude,
+                "owner_id": updated_place.owner_id
             }, 200
