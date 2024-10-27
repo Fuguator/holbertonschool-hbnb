@@ -26,24 +26,24 @@ class Place(BaseModel):
         self.save()
 
     def title_validation(self, text):
-        if len(text) < 1:
+        if len(self.title) < 1:
             raise ValueError("title's length is empty")
-        elif len(text) > 100:
+        elif len(self.title) > 100:
             raise ValueError("title's length is over 100 characters")
         self.title = text
 
     def price_validation(self, value):
-        if value < 0:
+        if self.price < 0:
             raise ValueError("Price can't be negative")
         self.price = value
 
     def latitude_validation(self, value):
-        if len(value) not in range(-90, 90):
+        if len(self.latitude) not in range(-90, 90):
             raise ValueError("latitude must be in range -90 : 90")
         self.latitude = value
         
     def longitude_validation(self, value):
-        if len(value) not in range(-180, 180):
+        if len(self.latitude) not in range(-180, 180):
             raise ValueError("longtitude must be in range -180 : 180")
         self.longitude = value
     
