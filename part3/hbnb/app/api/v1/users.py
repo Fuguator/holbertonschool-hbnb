@@ -12,6 +12,7 @@ user_model = api.model('User', {
     'password': fields.String(required=True, description='Password for the user')
 })
 
+bcrypt = Bcrypt()
 facade = HBnBFacade()
 
 @api.route('/')
@@ -42,7 +43,7 @@ class UserList(Resource):
         password = user_data.get('password')
         if not password:
             return {'error': 'Invalid password'}, 400
-        hashed_password = Bcrypt.generate_password_hash(password)
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         user_data['password'] = hashed_password
 
         new_user = facade.create_user(user_data)

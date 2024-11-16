@@ -2,11 +2,11 @@ import uuid
 from datetime import datetime
 from app.models.__init__ import BaseModel
 import re
-from flask_bcrypt import bcrypt
+from flask_bcrypt import Bcrypt
 
 
 regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-
+bcrypt = Bcrypt()
 
 class User(BaseModel):
     def __init__(self, first_name, last_name, email, password):
