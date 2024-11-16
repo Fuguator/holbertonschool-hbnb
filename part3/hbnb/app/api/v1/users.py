@@ -1,13 +1,15 @@
 from flask_restx import Namespace, Resource, fields
 from app.services.facade import HBnBFacade
 import re
+from flask_bcrypt import Bcrypt
 
 api = Namespace('users', description='User operations')
 
 user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user')
+    'email': fields.String(required=True, description='Email of the user'),
+    'password': fields.String(required=True, description='Password for the user')
 })
 
 facade = HBnBFacade()
@@ -34,6 +36,15 @@ class UserList(Resource):
         email = user_data.get('email')
         if not email or not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             return {'error': 'Invalid email format'}, 400
+
+
+        # getting and hashing password
+        password = user_data.get('password')
+        if not password:
+            return {'error': 'Invalid password'}, 400
+        hashed_password = Bcrypt.generate_password_hash(password)
+        user_data['password'] = hashed_password
+
 
         new_user = facade.create_user(user_data)
         return {
