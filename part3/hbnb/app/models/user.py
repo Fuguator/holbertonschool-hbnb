@@ -16,7 +16,7 @@ class User(BaseModel):
         self.email = email
         self.is_admin = False
         self.places = []
-        self._password = password
+        self.password = password
 
 
     def save(self):

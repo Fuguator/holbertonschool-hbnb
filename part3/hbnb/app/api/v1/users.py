@@ -1,7 +1,8 @@
 from flask_restx import Namespace, Resource, fields
-from app.services.facade import HBnBFacade
 import re
 from flask_bcrypt import Bcrypt
+
+from app.services import facade
 
 api = Namespace('users', description='User operations')
 
@@ -13,7 +14,6 @@ user_model = api.model('User', {
 })
 
 bcrypt = Bcrypt()
-facade = HBnBFacade()
 
 @api.route('/')
 class UserList(Resource):

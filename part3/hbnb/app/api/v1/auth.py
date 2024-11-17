@@ -10,20 +10,25 @@ login_model = api.model('Login', {
     'email': fields.String(required=True, description='User email'),
     'password': fields.String(required=True, description='User password')
 })
-
 @api.route('/login')
 class Login(Resource):
     @api.expect(login_model)
     def post(self):
         """Authenticate user and return a JWT token"""
         credentials = api.payload  # Get the email and password from the request payload
-        
+    
         # Step 1: Retrieve the user based on the provided email
         user = facade.get_user_by_email(credentials['email'])
         
+        # Debugging: Check what 'user' is being retrieved
+        if user:
+            print(f"User email: {user.email}")  # Print the email to ensure it's being retrieved correctly
+
         # Step 2: Check if the user exists and the password is correct
-        if not user or not user.verify_password(credentials['password']):
-            return {'error': 'Invalid credentials'}, 401
+        if not user:
+            return {'error': 'No such user'}, 401 
+        if not user.verify_password(credentials['password']):
+            return {'error': 'Invalid password'}, 401
 
         # Step 3: Create a JWT token with the user's id and is_admin flag
         access_token = create_access_token(identity={'id': str(user.id), 'is_admin': user.is_admin})
