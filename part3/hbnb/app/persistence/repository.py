@@ -32,6 +32,7 @@ class InMemoryRepository(Repository):
 
     def add(self, obj):
         self._storage[obj.id] = obj
+        print(obj)
 
     def get(self, obj_id):
         return self._storage.get(obj_id)
